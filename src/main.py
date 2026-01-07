@@ -79,7 +79,7 @@ def main():
     parser.add_argument("--limit", type=int, default=10, help="Number of records to display")
     parser.add_argument("--fit", action="store_true", help="Generate FIT files for Garmin")
     parser.add_argument("--sync", action="store_true", help="Upload weight data to Garmin Connect")
-    parser.add_argument("--output-dir", default="garmin-fit", help="Directory for generated FIT files")
+    parser.add_argument("--output-dir", default="data/garmin-fit", help="Directory for generated FIT files")
     args = parser.parse_args()
 
     # If --sync is requested, we must also have --fit
@@ -156,9 +156,9 @@ def main():
                 if weights:
                     logger.info(f"Successfully retrieved {len(weights)} weight records")
                     display_weight_data(weights, limit=args.limit)
-                    
+
                     # Save to JSON file
-                    output_file = f"weight_data_{username}.json"
+                    output_file = f"data/weight_data_{username}.json"
                     with open(output_file, 'w', encoding='utf-8') as f:
                         json.dump(weights, f, indent=2, ensure_ascii=False)
                     logger.info(f"Weight data saved to {output_file}")

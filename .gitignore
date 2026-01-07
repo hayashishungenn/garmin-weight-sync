@@ -40,3 +40,10 @@ garmin-fit/
 .garth/
 
 test-users.json
+
+# Docker - sensitive config and data
+config/users.json
+data/*
+
+# Claude
+/.claude

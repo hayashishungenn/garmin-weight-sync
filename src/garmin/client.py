@@ -22,7 +22,7 @@ class ActivityUploadFormat(Enum):
     TCX = auto()
 
 class GarminClient:
-    def __init__(self, email, password, auth_domain="CN", session_dir=".garth"):
+    def __init__(self, email, password, auth_domain="CN", session_dir="data/.garth"):
         self.email = email
         self.password = password
         self.auth_domain = auth_domain
