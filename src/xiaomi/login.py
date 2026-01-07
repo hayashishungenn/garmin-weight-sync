@@ -12,7 +12,6 @@ import os
 import random
 import string
 import sys
-import tempfile
 import time
 import webbrowser
 from pathlib import Path
@@ -325,27 +324,37 @@ class XiaomiLogin:
     def _handle_captcha(self, result: Dict) -> Optional[Dict]:
         """Handle captcha challenge"""
         print("\n🖼️  Captcha Required")
-        
+
         captcha_image = result.get("captcha")
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as f:
-            f.write(captcha_image)
-            captcha_path = f.name
-        
+
+        # Create data/captcha directory if it doesn't exist
+        captcha_dir = Path("data/captcha")
+        captcha_dir.mkdir(parents=True, exist_ok=True)
+
+        # Generate unique filename with timestamp
+        timestamp = int(time.time())
+        captcha_path = captcha_dir / f"captcha_{timestamp}.png"
+
+        # Write captcha image to file
+        captcha_path.write_bytes(captcha_image)
+
         print(f"📸 Captcha image saved to: {captcha_path}")
-        
+
+        # Get absolute path for browser
+        captcha_abs_path = captcha_path.resolve()
+
         # Try to open in browser
         try:
-            webbrowser.open(f"file://{captcha_path}")
+            webbrowser.open(f"file://{captcha_abs_path}")
             print("✅ Captcha image opened in browser")
         except Exception as e:
             print(f"⚠️  Could not open browser: {e}")
-            print(f"Please open the file manually: {captcha_path}")
-        
+            print(f"Please open the file manually: {captcha_abs_path}")
+
         # Get user input
         code = input("\nEnter the captcha code: ").strip()
-        
-        # Cleanup
-        Path(captcha_path).unlink(missing_ok=True)
+
+        # Note: Keeping captcha file for debugging purposes (not deleting)
         
         if not code:
             print("❌ No code entered. Aborting.")
