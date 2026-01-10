@@ -79,10 +79,10 @@ def display_weight_data(weights, limit=10):
 
 def main():
     parser = argparse.ArgumentParser(description="Xiaomi Weight Sync")
-    parser.add_argument("--config", default="users.json", help="Path to users.json config file")
+    parser.add_argument("--config", default="test-users.json", help="Path to users.json config file")
     parser.add_argument("--limit", type=int, default=10, help="Number of records to display")
     parser.add_argument("--fit", action="store_true", help="Generate FIT files for Garmin")
-    parser.add_argument("--sync", action="store_true", help="Upload weight data to Garmin Connect")
+    parser.add_argument("--sync", default="sync",action="store_true", help="Upload weight data to Garmin Connect")
     parser.add_argument("--output-dir", default="data/garmin-fit", help="Directory for generated FIT files")
     args = parser.parse_args()
 
@@ -159,18 +159,15 @@ def main():
                 # First attempt to use the new API endpoint
                 logger.info("Trying to fetch weight data using the new API...")
                 try:
-                    fitness_data = client.get_fitness_data_by_time(key="weight")
-                    if fitness_data:
-                        logger.info(f"Successfully fetched {len(fitness_data)} raw records using the new API")
-                        # weights = unmarshal_fitness_data(fitness_data)
-                        weights =client.get_model_weights(model)
-                        logger.info(f"Parsed and obtained {len(weights)} weight records")
+                    weights =client.get_model_weights(model)
+                    logger.info(f"Parsed and obtained {len(weights)} weight records")
                 except Exception as e:
                     logger.warning(f"Failed to fetch data with the new API: {e}")
                     logger.info("Falling back to legacy API...")
                 
                 # If no data from the new API, use the legacy API (for backward compatibility)
                 if not weights:
+                    fitness_data = client.get_fitness_data_by_time(key="weight")
                     logger.info(f"Using legacy API, model: {model}")
                     # weights = client.get_model_weights(model)
                     weights = unmarshal_fitness_data(fitness_data)
