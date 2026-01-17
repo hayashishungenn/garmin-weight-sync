@@ -48,8 +48,12 @@ data/*
 # Claude
 /.claude
 
+# Git worktrees
+.worktrees
+
 # release
 /release/*
 
 dist/*
 GarminWeightSync.spec/*
+CLAUDE.md
