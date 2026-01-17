@@ -10,6 +10,9 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt
 from typing import Optional, Dict, Any
 import base64
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class XiaomiPage(QWizardPage):
@@ -194,6 +197,8 @@ class XiaomiPage(QWizardPage):
         Returns:
             包含 success 和 token/error 的字典
         """
+        from gui.auth_dialogs import CaptchaDialog
+
         # 最多重试 MAX_RETRY_COUNT 次
         if retry_count >= self.MAX_RETRY_COUNT:
             return {
@@ -253,6 +258,8 @@ class XiaomiPage(QWizardPage):
         Returns:
             包含 success 和 token/error 的字典
         """
+        from gui.auth_dialogs import MfaDialog
+
         # 最多重试 MAX_RETRY_COUNT 次
         if retry_count >= self.MAX_RETRY_COUNT:
             return {
@@ -471,7 +478,8 @@ class AddUserDialog(QWizard):
         self.setWindowTitle("添加用户")
         self.setMinimumSize(600, 500)
         self.setWizardStyle(QWizard.WizardStyle.ModernStyle)
-        self.setOption(QWizard.WizardOption.HelpButtonOnLeft, False)
+        # 禁用帮助按钮 (PyQt6 使用 HaveHelpButton)
+        self.setOption(QWizard.WizardOption.HaveHelpButton, False)
 
         # 添加页面
         self.xiaomi_page = XiaomiPage(self)
