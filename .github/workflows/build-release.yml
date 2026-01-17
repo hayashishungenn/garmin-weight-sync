@@ -72,17 +72,17 @@ jobs:
 
       - name: Extract version
         id: version
+        shell: bash  # 必须指定 bash 才能使用 ${VAR#prefix} 语法
         run: |
-          if [[ "${{ github.event_name }}" == "release" ]]; then
-            VERSION=${GITHUB_REF#refs/tags/}
-          elif [[ "${{ github.event_name }}" == "push" ]] && [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            VERSION=${{ github.ref#refs/tags/}}
+          if [ "${{ github.event_name }}" == "release" ]; then
+            VERSION="${{ github.event.release.tag_name }}"
+          elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/}"
           else
-            VERSION="dev-${{ github.sha }}"
+            VERSION="dev-${GITHUB_SHA:0:7}"
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "version_number=${VERSION#v}" >> $GITHUB_OUTPUT
-        shell: bash
 
       - name: Build with PyInstaller (macOS)
         if: matrix.platform == 'macos'
