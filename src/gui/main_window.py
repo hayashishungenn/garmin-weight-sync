@@ -103,6 +103,7 @@ class MainWindow(QMainWindow):
         """
         super().__init__()
         self.config_path = Path(config_path)  # 保存当前配置路径
+        self.config_loaded = True  # 跟踪配置是否已加载
         self.orchestrator = SyncOrchestrator(config_path)
         self.sync_workers = {}  # username -> SyncWorker
         self.init_ui()
