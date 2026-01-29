@@ -27,8 +27,11 @@ jobs:
       - name: Restore users.json
         env:
           USERS_JSON_B64: ${{ secrets.USERS_JSON_B64 }}
-        run: |
-          echo "$USERS_JSON_B64" | base64 -d > users.json
+        run: python -c "import os,base64; open('users.json','wb').write(base64.b64decode(os.environ['USERS_JSON_B64']))"
+
+
+      - name: Ensure data dir
+        run: python -c "import os; os.makedirs('data', exist_ok=True)"
 
       - name: Run sync
         run: |
