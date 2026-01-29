@@ -3,9 +3,9 @@ name: garmin-weight-sync
 on:
   workflow_dispatch:
   schedule:
-    # 日本时间每天 02:00 运行
-    # GitHub cron 使用 UTC，所以 02:00 JST 等于 17:00 UTC
-    - cron: "0 17 * * *"
+    # 北京时间每天 08:00 运行
+    # cron 使用 UTC 所以 08:00 北京时间 等于 00:00 UTC
+    - cron: "0 0 * * *"
 
 jobs:
   sync:
